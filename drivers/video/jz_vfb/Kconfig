@@ -1,0 +1,27 @@
+menuconfig VFB_JZ
+	tristate "JZ virtual framebuffer(just for test)"
+	depends on FB
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	help
+	  virtual Framebuffer support
+config VFB_XRES
+        int "vfb xres"
+        depends on VFB_JZ
+        default 480
+        help
+          virtual fb size:pix number of each line
+config VFB_YRES
+        int "vfb yres"
+        depends on VFB_JZ
+        default 640
+        help
+          virtual fb size: number of lines
+config VFB_BPP
+        int "vfb bpp"
+        depends on VFB_JZ
+        default 24
+        help
+          virtual fb bpp info
+

@@ -1,0 +1,27 @@
+choice
+	prompt "Select hardware version"
+	depends on WATCH_AW808
+	default AW808_HW_MAIN
+
+config AW808_HW_MAIN
+       bool "aw808 hardware version main"
+       depends on WATCH_AW808
+
+config AW808_HW_X3
+       bool "aw808 hardware version x3"
+       depends on WATCH_AW808
+
+config AW808_HW_IN901
+       bool "aw808 hardware version in901"
+       depends on WATCH_AW808
+
+config AW808_HW_V11_NATURAL_ROUND
+       bool "aw808 hardware version v11 for natural round"
+       depends on WATCH_AW808
+
+config AW808_HW_V11_WISE_SQUARE
+       bool "aw808 hardware version v11 for wise square"
+       depends on WATCH_AW808
+
+endchoice
+

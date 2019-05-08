@@ -1,0 +1,199 @@
+menuconfig SND_ASOC_INGENIC
+	tristate "ASoC support for Ingenic"
+	depends on JZRISC && SND_SOC
+	help
+		Say 'Y' to enable Alsa drivers of xburst.
+
+if SND_ASOC_INGENIC
+
+config SND_ASOC_JZ_AIC_V12
+	tristate
+
+config SND_ASOC_DMA_V13
+	tristate
+
+config SND_ASOC_DMA_V12
+	tristate
+
+config SND_ASOC_JZ_AIC_SPDIF_V12
+	tristate
+	select SND_ASOC_JZ_AIC_V12
+
+config SND_ASOC_JZ_AIC_SPDIF_V13
+	tristate
+	select SND_ASOC_JZ_AIC_V12
+
+config SND_ASOC_JZ_AIC_I2S_V12
+	tristate
+	select SND_ASOC_JZ_AIC_V12
+
+config SND_ASOC_JZ_AIC_I2S_V13
+	tristate
+	select SND_ASOC_JZ_AIC_V12
+
+config SND_ASOC_JZ_PCM_DUMP_CDC
+	tristate
+
+config SND_ASOC_JZ_PCM_V12
+	tristate
+	select SND_ASOC_JZ_PCM_DUMP_CDC
+
+config SND_ASOC_JZ_PCM_V13
+	tristate
+	select SND_ASOC_JZ_PCM_DUMP_CDC
+
+config SND_ASOC_JZ_SPDIF_DUMP_CDC
+	tristate
+
+config SND_ASOC_JZ_SPDIF_V12
+	tristate
+	select SND_ASOC_JZ_SPDIF_DUMP_CDC
+
+config SND_ASOC_JZ_SPDIF_V13
+	tristate
+	select SND_ASOC_JZ_SPDIF_DUMP_CDC
+
+config SND_ASOC_JZ_ICDC_D1
+	tristate
+	select SND_ASOC_JZ_AIC_V12
+
+config SND_ASOC_JZ_ICDC_D2
+	tristate
+	select SND_ASOC_JZ_AIC_V12
+
+config SND_ASOC_JZ_ICDC_D3
+	tristate
+	select SND_ASOC_JZ_AIC_V12
+	select SND_ASOC_JZ_INCODEC
+
+config SND_ASOC_JZ_DMIC_DUMP_CDC
+	tristate
+
+config SND_ASOC_JZ_DMIC_V13
+	tristate
+	select SND_ASOC_JZ_DMIC_DUMP_CDC
+
+config SND_ASOC_JZ_DMIC_V12
+	tristate
+	select SND_ASOC_JZ_DMIC_DUMP_CDC
+
+config SND_ASOC_JZ_EXTCDC
+	tristate
+	select SND_ASOC_JZ_AIC_V12
+
+menu "jz board type select"
+choice
+	prompt "soc m200 codec type select"
+	depends on SOC_M200
+config SND_ASOC_INGENIC_DORADO_ICDC
+	tristate "Audio support for dorado with internal codec"
+	select SND_ASOC_DMA_V12
+	select SND_ASOC_JZ_AIC_I2S_V12
+	select SND_ASOC_JZ_ICDC_D1
+	select SND_ASOC_JZ_PCM_V12
+	select SND_ASOC_JZ_DMIC_V12
+	help
+	  Say Y if you want to add audio support for M200 Dorado
+	  reference board with internal codec
+config SND_ASOC_INGENIC_NEWTON2_PLUS_ICDC
+	tristate "Audio support for newton2 plus with internal codec"
+	select SND_ASOC_DMA_V12
+	select SND_ASOC_JZ_AIC_I2S_V12
+	select SND_ASOC_JZ_ICDC_D1
+	select SND_ASOC_JZ_PCM_V12
+	select SND_ASOC_JZ_DMIC_V12
+	help
+	  Say Y if you want to add audio support for M200S Newton2 Plus
+	  reference board with internal codec
+config SND_ASOC_INGENIC_WATCH_AW808_ICDC
+	tristate "Audio support for watch aw808 with internal codec"
+	select SND_ASOC_DMA_V12
+	select SND_ASOC_JZ_AIC_I2S_V12
+	select SND_ASOC_JZ_ICDC_D1
+	select SND_ASOC_JZ_PCM_V12
+	help
+	  Say Y if you want to add audio support for M200 watch aw808
+	  reference board with internal codec
+endchoice
+
+
+choice
+	prompt "soc 4775 codec type select"
+	depends on SOC_4775
+config SND_ASOC_INGENIC_MENSA_ICDC
+	bool "Audio support for mensa with internal codec"
+	select SND_ASOC_DMA_V12
+	select SND_ASOC_JZ_AIC_I2S_V12
+	select SND_ASOC_JZ_ICDC_D2
+	select SND_ASOC_JZ_PCM_V12
+
+config SND_ASOC_INGENIC_MENSA_SPDIF_V12
+	bool "Audio support for mensa with spdif"
+	select SND_ASOC_DMA_V12
+	select SND_ASOC_JZ_AIC_SPDIF_V12
+	select SND_ASOC_JZ_SPDIF_V12
+	select SND_ASOC_JZ_PCM_V12
+endchoice
+
+choice
+	prompt "soc x1000 codec type select"
+	depends on SOC_X1000
+config SND_ASOC_INGENIC_PHOENIX_ICDC
+	tristate "Audio support for phoenix with internal codec"
+	select SND_ASOC_DMA_V12
+	select SND_ASOC_JZ_AIC_I2S_V13
+	select SND_ASOC_JZ_ICDC_D3
+	select SND_ASOC_JZ_PCM_V13
+	select SND_ASOC_JZ_DMIC_V13
+
+config SND_ASOC_INGENIC_HALLEY2_ICDC
+	tristate "Audio support for halley2 with internal codec"
+	select SND_ASOC_DMA_V12
+	select SND_ASOC_JZ_AIC_I2S_V13
+	select SND_ASOC_JZ_ICDC_D3
+	select SND_ASOC_JZ_PCM_V13
+	select SND_ASOC_JZ_DMIC_V13
+
+
+config SND_ASOC_INGENIC_PHOENIX_SPDIF
+	bool "Audio support for phoenix with spdif"
+	select SND_ASOC_DMA_V12
+	select SND_ASOC_JZ_AIC_SPDIF_V13
+	select SND_ASOC_JZ_SPDIF_V13
+	select SND_ASOC_JZ_PCM_V13
+	select SND_ASOC_JZ_DMIC_V13
+
+config SND_ASOC_INGENIC_HALLEY2_SPDIF
+	bool "Audio support for halley2 with spdif"
+	select SND_ASOC_DMA_V12
+	select SND_ASOC_JZ_AIC_SPDIF_V13
+	select SND_ASOC_JZ_SPDIF_V13
+	select SND_ASOC_JZ_PCM_V13
+	select SND_ASOC_JZ_DMIC_V13
+endchoice
+
+config SND_ASOC_INGENIC_DMIC
+	bool "Support DMIC for record"
+endmenu
+
+
+config JZ_ASOC_DMA_AUTO_CLR_DRT_MEM
+	bool "JZ audio dma clear auto dirty memory"
+	help
+	  Say Y if you audio dma clear auto dirty memory, so you would not
+	  clear by slience_threshold set by user app
+config JZ_ASOC_DMA_HRTIMER_MODE
+	bool "JZ audio dma cyclic dma with hrtimer callback mode"
+	depends on (HIGH_RES_TIMERS && (SOC_4775 || SOC_M200 || SOC_4780 || SOC_X1000))
+	default n
+	help
+	  Say Y if you want suport sandard cyclic dma interface, Say N, that
+	  dma cyclic interface is not standard
+
+config JZ_ASOC_CODEC_HP_INSERT_REV
+	bool "JZ headphone jack detect is Reversal"
+	depends on SND_ASOC_JZ_ICDC_D1
+	default n
+	help
+	  Say Y if you headphone jack detect is Reversal
+endif

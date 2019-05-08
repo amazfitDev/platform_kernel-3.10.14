@@ -1,0 +1,31 @@
+
+choice
+	prompt "Chip type"
+	depends on SOC_X1000
+	default CHIP_X1000
+
+config CHIP_X1000
+       bool "chip-x1000"
+       select TRACEPOINTS
+       select SYS_SUPPORTS_HIGHMEM
+       select GENERIC_CLOCKEVENTS_BROADCAST
+       select JZ_GPIO_SAVE
+
+endchoice
+
+choice
+	prompt "board timer select sys-ost or tcu"
+	depends on CHIP_X1000
+	default TIMER_SYS_OST
+config TIMER_SYS_OST
+	bool "sys-ost"
+config TIMER_TCU
+	bool "tcu"
+endchoice
+
+config JZ_GPIO_SAVE
+	bool
+
+if CHIP_X1000
+source "arch/mips/xburst/soc-x1000/chip-x1000/Kconfig"
+endif

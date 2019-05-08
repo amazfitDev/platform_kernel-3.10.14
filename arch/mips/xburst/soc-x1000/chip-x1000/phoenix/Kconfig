@@ -1,0 +1,15 @@
+choice
+prompt "BOARD version"
+depends on PRODUCT_X1000_PHOENIX
+default BOARD_X1000_PHOENIX_V20
+
+config BOARD_X1000_PHOENIX_V20
+bool "board x1000 phoenix v20"
+depends on PRODUCT_X1000_PHOENIX
+
+endchoice
+
+config BOARD_NAME
+string
+default "phoenix_v20" if BOARD_X1000_PHOENIX_V20
+

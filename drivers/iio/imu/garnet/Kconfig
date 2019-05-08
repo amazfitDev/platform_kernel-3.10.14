@@ -1,0 +1,37 @@
+#
+# inv-mpu-iio driver for Invensense MPU
+#
+
+config ICM30630_INV_MPU_IIO
+	tristate "ICM30630 Invensense MPU devices"
+	depends on I2C && SYSFS && SENSORHUB_ICM30630
+	select IIO_BUFFER
+	select IIO_TRIGGERED_BUFFER
+	default n
+	help
+	  This driver supports the Invensense mpu devices.
+	  This driver can be built as a module. The module will be called
+	  inv-mpu-iio.
+
+config ICM30630_INV_MPU_IIO_I2C
+	tristate "ICM30630 Invensense MPU devices on I2C bus"
+	depends on I2C && SYSFS && ICM30630_INV_MPU_IIO
+	select IIO_BUFFER
+	select IIO_TRIGGERED_BUFFER
+	default n
+	help
+	  This driver supports the Invensense mpu devices.
+	  This driver can be built as a module. The module will be called
+	  inv-mpu-iio.
+
+config ICM30630_INV_MPU_IIO_SPI
+	tristate "ICM30630 Invensense MPU devices on SPI bus"
+	depends on SPI && SYSFS && ICM30630_INV_MPU_IIO
+	select IIO_BUFFER
+	select IIO_TRIGGERED_BUFFER
+	default n
+	help
+	  This driver supports the Invensense mpu devices.
+	  This driver can be built as a module. The module will be called
+	  inv-mpu-iio.
+

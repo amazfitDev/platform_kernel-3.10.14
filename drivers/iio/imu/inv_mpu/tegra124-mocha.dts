@@ -1,0 +1,109 @@
+/dts-v1/;
+
+#include "tegra124.dtsi"
+#include "tegra124-platforms/tegra124-tn8-io.dtsi"
+#include "tegra124-platforms/tegra124-e1922-emc.dtsi"
+#include "tegra124-platforms/tegra124-tn8-e1736-pmic.dtsi"
+#include "tegra124-platforms/tegra124-tn8-e1736-fixed.dtsi"
+#include "tegra124-platforms/tegra124-e1780-gpio-default.dtsi"
+#include "tegra124-platforms/tegra124-e1780-pinmux.dtsi"
+#include "tegra124-platforms/tegra124-e1780-keys.dtsi"
+
+/ {
+	model = "NVIDIA Tegra124 TN8";
+	compatible = "nvidia,mocha", "nvidia,tegra124";
+	nvidia,dtsfilename = __FILE__;
+	nvidia,boardids = "1780:1100:3:A:7","1845:1000:0:A:7";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	chosen {
+		bootargs = "tegraid=40.0.0.00.00 vmalloc=256M video=tegrafb console=ttyS0,115200n8 earlyprintk";
+		linux,initrd-start = <0x85000000>;
+		linux,initrd-end = <0x851bc400>;
+	};
+
+	i2c@7000c000 {
+		backlight@2c {
+			compatible = "ti,lp8557";
+			reg = <0x2c>;
+
+			dev-ctrl = /bits/ 8 <0x05>;
+			init-brt = /bits/ 8 <0xff>;
+		};
+		mpu6515_acc@68 {
+			compatible = "inven,mpu6515";
+			reg = <0x68>;
+			interrupt-parent = <&gpio>;
+			interrupts = <144 0x01>;
+			fs_range = <0x00>;
+			axis_map_x = <1>;
+			axis_map_y = <0>;
+			axis_map_z = <2>;
+			negate_x = <0>;
+			negate_y = <0>;
+			negate_z = <1>;
+			poll_interval = <200>;
+			min_interval = <5>;
+			inven,secondary_reg = <0x0E>;
+			/* If no compass sensor,
+			 * replace "compass" with "none"
+			 */
+			inven,secondary_type = "compass";
+			inven,secondary_name = "ak8963";
+			inven,secondary_axis_map_x = <1>;
+			inven,secondary_axis_map_y = <0>;
+			inven,secondary_axis_map_z = <2>;
+			inven,secondary_negate_x = <0>;
+			inven,secondary_negate_y = <0>;
+			inven,secondary_negate_z = <1>;
+			inven,aux_reg = <0x76>;
+			/* If no pressure sensor,
+			 * replace "pressure" with "none"
+			 */
+			inven,aux_type = "none";
+			inven,aux_name = "bmp280";
+		};
+	};
+
+	i2c@7000c400 {
+		status = "okay";
+		clock-frequency = <400000>;
+
+		bq2419x: bq2419x@6b {
+			compatible = "ti,bq2419x";
+			reg = <0x6b>;
+
+
+			charger {
+				regulator-name = "batt_regulator";
+				regulator-max-microamp = <3000>;
+				watchdog-timeout = <40>;
+				rtc-alarm-time = <3600>;
+				auto-recharge-time = <1800>;
+				consumers {
+					c1 {
+						regulator-consumer-supply = "usb_bat_chg";
+						regulator-consumer-device = "tegra-udc.0";
+					};
+				};
+			};
+
+			vbus {
+				regulator-name = "vbus_regulator";
+				consumers {
+					c1 {
+						regulator-consumer-supply = "usb_vbus";
+						regulator-consumer-device = "tegra-ehci.0";
+					};
+
+					c2 {
+						regulator-consumer-supply = "usb_vbus";
+						regulator-consumer-device = "tegra-otg";
+					};
+				};
+			};
+		};
+	};
+};
+

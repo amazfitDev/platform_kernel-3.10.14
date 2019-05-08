@@ -1,0 +1,29 @@
+choice
+prompt "Core Board Version"
+depends on PRODUCT_X1000_HALLEY2
+default HALLEY2_CORE_V10
+
+config HALLEY2_CORE_V10
+bool "halley2 core board v10"
+
+config HALLEY2_MINI_CORE_V10
+bool "halley2 mini core board v10"
+
+endchoice
+
+
+choice
+prompt "Ext BOARD version"
+depends on PRODUCT_X1000_HALLEY2
+default BOARD_X1000_HALLEY2_V10
+
+config BOARD_X1000_HALLEY2_V10
+bool "board x1000 halley2 v10"
+depends on PRODUCT_X1000_HALLEY2
+
+endchoice
+
+config BOARD_NAME
+string
+default "halley2_v10" if BOARD_X1000_HALLEY2_V10
+

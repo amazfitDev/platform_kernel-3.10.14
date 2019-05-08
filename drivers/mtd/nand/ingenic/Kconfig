@@ -1,0 +1,50 @@
+config MTD_NAND_JZ
+	tristate "Support for jz MTD NAND Flash  driver"
+	help
+		Enables support for NAND Flash on ingenic.
+
+if MTD_NAND_JZ
+
+config MTD_NAND_JZ_BUS_WITDH_16
+	bool "Support for 16bit buswidth nand"
+	default n
+
+config MTD_NAND_JZBCH
+	bool "Support for jz bch driver for mtd nand"
+	default y
+
+choice
+	prompt "Nand init mode"
+	help
+	  Select Nand init Mode (Nand params config as automatic or traditional config)
+
+config MTD_NAND_JZ_AUTO
+	bool "Automatic config params"
+	help
+	  Say Y here to enable Automatic config params
+	  (Automatic config params : use ingenic burner write the params on nand)
+
+config MTD_NAND_JZ_NORMAL
+	bool "traditional config params"
+	help
+	  Say Y here to enable traditional config params
+	  (traditional config params : use kerenl nand_ids)
+endchoice
+
+choice
+	prompt "Nand controller select"
+	help
+	   Select Nand controller
+config MTD_NAND_JZNFI
+	bool "Nand Flash Interface (NFI)"
+config MTD_NAND_JZNEMC
+	bool "External Nand Memory Controller (NEMC)"
+endchoice
+
+choice
+	prompt "nand flash chip select for jz board"
+	depends on MTD_NAND_JZ_NORMAL
+config MTD_NAND_MIRCON_ACA
+	bool	"MICRON MT29F32G08CBACA"
+endchoice
+endif #MTD_NAND_JZ

@@ -1,0 +1,36 @@
+
+menuconfig FB_JZ_V11
+	tristate "JZ LCDC  framebuffer V1.1"
+	depends on FB && (SOC_4780 || SOC_4775)
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	help
+	  Framebuffer support for the JZ4775 && JZ4780 SoC.
+
+config DISABLE_LVDS_FUNCTION
+       bool "disable LVDS function for JZSOC lcd controller"
+       depends on FB_JZ_V11
+       default n
+
+config JZ_EPD_GPIO_FUNCTION
+       bool "Enable EPD GPIO function for JZSOC EPD controller"
+       depends on FB && (FB_JZ4775_ANDROID_EPD)
+       default n
+
+config JZ4780_AOSD
+		bool "aosd function"
+		depends on FB_JZ_V11
+		default n
+		help
+		If you plan to use the graphics internal AOSD module to
+		deal with video UI for frame buffer when video directly
+		output to LCD controller foregrount 1, say Y here.
+
+config JZFB_LCDC_INIT
+		bool "Initialize the LCD controller"
+		depends on FB_JZ_V11
+		default n
+		help
+		If you want to initialize the LCD controller when
+		register framebuffer driver, say Y here.

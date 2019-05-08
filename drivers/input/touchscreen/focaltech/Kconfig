@@ -1,0 +1,66 @@
+#
+# Touchscreen driver focaltech configuration ( now just use for ft3x0x)
+#
+
+config TOUCHSCREEN_FOCALTECH
+       tristate "Touchscreen focaltech (now just use ft3x0x)"
+       depends on I2C && M200_SUPPORT_TSC
+       default n
+       help
+       now just use ft3x0x for in901 board
+
+if TOUCHSCREEN_FOCALTECH
+config FOCALTECH_GESTRUE
+	 bool "focaltech click wakeup system"
+	 depends on TOUCHSCREEN_FOCALTECH
+	 default n
+	 help
+		just distinguish click action so do not use gestrue lib
+
+config FOCALTECH_EXT_FUNC
+	 bool "focaltech extra function"
+	 depends on TOUCHSCREEN_FOCALTECH
+	 default n
+	 help
+		the focaltech type IC (now just for FT3X0X) extra function:
+		l.sysfs inferface
+		2.tp firmware upgrade control
+		3.tp regs read write
+
+if FOCALTECH_EXT_FUNC
+
+config FOCALTECH_AUTO_UPGRADE
+	 bool "focaltech auto upgrade"
+	 depends on FOCALTECH_EXT_FUNC
+	 default n
+	 help
+	 the focaltech type IC (now just for FT3X0X) auto upgrade as your version large than the older.
+
+config FOCALTECH_SYSFS_DEBUG
+	 bool "focaltech debug by the sysfs"
+	 depends on FOCALTECH_EXT_FUNC
+	 default n
+	 help
+	 1. the focaltech type IC (now just for FT3X0X) debug by the sysfs interface.
+	 2. the focaltech type IC (now just for FT3X0X) can echo the firmware name which the path should be right to the sysfs to update the firmware.
+	 (the path of the firmware push is accordding to the function "fts_GetFirmwareSize" and "fts_ReadFirmware" which is in focaltech_ex_fun.c,default path is /sdcard/xxx)
+	 eg. "echo xxx.bin > ftsfwupgradeapp", and xxx.bin should be exist in the /sdcard/
+
+config FOCALTECH_FTS_CTL_IIC
+	 bool "focaltech RW i2c driver and apk debug by select the follow choose"
+	 depends on FOCALTECH_EXT_FUNC
+	 default n
+	 help
+	 the focaltech type IC (now just for FT3X0X) read or write i2c driver.(may read the firmware from focaltech)
+
+if FOCALTECH_FTS_CTL_IIC
+config FOCALTECH_APK_DEBUG
+	 bool "focaltech debug by the apk"
+	 depends on FOCALTECH_FTS_CTL_IIC
+	 default y
+	 help
+	 you can debug by install the apk
+endif
+
+endif
+endif

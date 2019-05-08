@@ -1,0 +1,31 @@
+#
+# jz vpu configuration
+#
+
+menuconfig JZ_VPU
+	bool"JZ VPU driver"
+	default y
+	help
+		VPU support.
+
+choice
+	depends on JZ_VPU
+	prompt "select vpu type"
+	default JZ_VPU_V13
+
+config JZ_VPU_PRE
+	bool "VPU driver for Ingenic previous version"
+	help
+	  Support for Ingenic VPU muti-thread operations.
+
+config JZ_VPU_V12
+	bool "VPU driver v12 for Ingenic m200"
+	help
+	  Support for Ingenic VPU muti-thread operations.
+
+config JZ_VPU_V13
+	bool "VPU driver v13 for Ingenic x1000"
+	help
+	  Support for Ingenic VPU muti-thread operations.
+
+endchoice

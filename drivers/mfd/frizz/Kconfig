@@ -1,0 +1,45 @@
+#
+# "sensor hub devices"
+#
+
+menu "Mega Chips support"
+    depends on INPUT
+
+config SENSORHUB_MCC
+    tristate "Mega chips support"
+    depends on INPUT
+    default n
+    ---help---
+      If unsure, say Y.
+
+if SENSORHUB_MCC
+
+config FRIZZ
+	tristate "Frizz sensor hub support"
+	default y
+	depends on SENSORHUB_MCC
+	help
+	  If you select yes here that will support Mega Chips's
+	  sensor hub frizz for your product.
+
+endif #SENSORHUB_MCC
+
+config FRIZZ_VERIFY
+    tristate "firmware download verify"
+	default n
+	depends on FRIZZ
+	help
+	  If you select yes here, when burn frizz firmware, it will
+	  verify, and it takes more time.
+if FRIZZ
+
+config WAKEUP_BY_RAISE
+	tristate "this is just a test config, should no more been used, see help"
+	default n
+	help
+		enable the Gesture to wakeup android, but the android(IWDS) has the choice and profile
+		to do such thing.So just leave it for test.
+
+endif
+
+endmenu

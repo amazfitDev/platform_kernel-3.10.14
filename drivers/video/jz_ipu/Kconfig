@@ -1,0 +1,4 @@
+config JZ_IPU_V12
+	bool "IPU V12 Driver"
+	help
+	  Support for Ingenic ipu v12 operations.

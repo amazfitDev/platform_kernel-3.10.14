@@ -1,0 +1,16 @@
+choice
+	prompt "Chip type"
+	depends on SOC_M200
+	default CHIP_M200
+
+config CHIP_M200
+       bool "chip-m200"
+       select TRACEPOINTS
+       select SYS_SUPPORTS_HIGHMEM
+       select GENERIC_CLOCKEVENTS_BROADCAST
+
+endchoice
+
+if CHIP_M200
+source "arch/mips/xburst/soc-m200/chip-m200/Kconfig"
+endif

@@ -1,0 +1,39 @@
+# JZ LCD V1.3  configuration
+
+menuconfig FB_JZ_V13
+	tristate "JZ LCDC framebuffer V1.3"
+	depends on FB
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	help
+	  Framebuffer support for the M200/T10 SoC.
+
+choice
+	depends on FB_JZ_V13
+	prompt "set lcd gpio"
+	default LCD_GPIO_FUNC0_24BIT
+
+config LCD_V13_SLCD_8BIT
+	bool "lcd v13  8bit slcd"
+	help
+	 set lcd gpio function1 only for 8bit smart panel
+		for example,
+		for truly_tft240240_2_e panel, set it
+config LCD_V13_SLCD_9BIT
+	bool "lcd v13 9bit slcd"
+	help
+	 set lcd gpio function1 only for 9bit smart panel
+config LCD_V13_SLCD_16BIT
+	bool "lcd v13 16bit slcd"
+	help
+	 set lcd gpio function1 only for 16bit smart panel
+endchoice
+
+config FB_JZ_DEBUG
+        bool "fb test for displaying color bar"
+        depends on FB_JZ_V13
+        default n
+        help
+           fb test for displaying color bar in your board.
+

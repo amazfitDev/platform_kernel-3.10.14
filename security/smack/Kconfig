@@ -1,0 +1,21 @@
+config SECURITY_SMACK
+	bool "Simplified Mandatory Access Control Kernel Support"
+	depends on NET
+	depends on INET
+	depends on SECURITY
+	select NETLABEL
+	select SECURITY_NETWORK
+	default n
+	help
+	  This selects the Simplified Mandatory Access Control Kernel.
+	  Smack is useful for sensitivity, integrity, and a variety
+	  of other mandatory security schemes.
+	  If you are unsure how to answer this question, answer N.
+
+config SECURITY_SMACK_PERMISSIVE_MODE
+	bool "Enable Permissive mode for debugging purpose"
+	depends on SECURITY_SMACK
+	help
+	  This selects the permissive mode of smack for debug purpose. This
+	  do not block any access of the smack policy and just warn the block
+	  by log message.
