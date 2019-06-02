@@ -1,3 +1,5 @@
+![status](https://img.shields.io/badge/Status-boots-yellow.svg)
+
 ## Kernel-3.10.14 development for Amazfit Pace
 ### Status
 The kernel boots, then after the screen timeouts the device is unresponsive.
@@ -31,3 +33,8 @@ If your toolchain is not on on path, you may temporary add it for this terminal 
 ```bash
 export PATH=<path-to-ingenic-newton-plus-sources>/prebuilts/gcc/linux-x86/mips/mipsel-linux-android-4.8/bin:$PATH
 ```
+
+### Emojis
+:see_no_evil:
+:hear_no_evil:
+:speak_no_evil:
