@@ -13,4 +13,5 @@ In the main branch (here) are the Ingenic's Newton 2 Plus kernel-3.10.14 sources
 | Stratos  | -       | -           |
 | Verge    | -       | -           |
 
+*hopfully we will have only one source/branch for all on the future*
 
