@@ -378,10 +378,14 @@ static int is_gpt_valid(struct parsed_partitions *state, u64 lba,
 		goto fail;
 	}
 	if (le64_to_cpu((*gpt)->last_usable_lba) > lastlba) {
+		//pr_debug("GPT: last_usable_lba incorrect: %lld > %lld\n",
+		//	 (unsigned long long)le64_to_cpu((*gpt)->last_usable_lba),
+		//	 (unsigned long long)lastlba);
+		// Change lba to lastlba
 		(*gpt)->last_usable_lba = lastlba;
-		pr_debug("GPT: last_usable_lba incorrect: %lld > %lld\n",
-			 (unsigned long long)le64_to_cpu((*gpt)->last_usable_lba),
-			 (unsigned long long)lastlba);
+		pr_debug("GPT: last_usable_lba incorrect, corrected: from %lld to %lld\n",
+			 (unsigned long long)lastlba,
+			 (unsigned long long)le64_to_cpu((*gpt)->last_usable_lba));
 		//goto fail;
 	}
 
@@ -568,21 +572,42 @@ static int find_valid_gpt(struct parsed_partitions *state, gpt_header **gpt,
                 /* This will be added to the EFI Spec. per Intel after v1.02. */
                 legacymbr = kzalloc(sizeof (*legacymbr), GFP_KERNEL);
                 if (legacymbr) {
-                        read_lba(state, 0, (u8 *) legacymbr,
-				 sizeof (*legacymbr));
-                        good_pmbr = is_pmbr_valid(legacymbr);
+                    read_lba(state, 0, (u8 *) legacymbr, sizeof (*legacymbr));
+                    good_pmbr = is_pmbr_valid(legacymbr);
 
-                        if (good_pmbr) {
-                            custom_mbr * tmp_mbr = (custom_mbr*)legacymbr;
-                            if (tmp_mbr->custom_signature == INGENIC_SIGNATURE) {
-                                gpt_header_lba = tmp_mbr->gpt_header_lba;
-                                if (gpt_header_lba == 0) {
-                                    gpt_header_lba = GPT_PRIMARY_PARTITION_TABLE_LBA;
-                                }
+                    // Handle Ingenic Signature
+                    if (good_pmbr) {
+                        custom_mbr * tmp_mbr = (custom_mbr*)legacymbr;
+
+                        // On amazfit pace there is no ingenic signature
+                        // thus, this can be removed (and the macros on the top)
+                        if (tmp_mbr->custom_signature == INGENIC_SIGNATURE) {
+                        	printk(KERN_WARNING 
+                        		"Found Ingenic signature on gpt header.\n");
+                            gpt_header_lba = tmp_mbr->gpt_header_lba;
+                            if (gpt_header_lba == 0) {
+                                gpt_header_lba = GPT_PRIMARY_PARTITION_TABLE_LBA;
                             }
                         }
+                        // Report the other case too
+                        else {
+                        	printk(KERN_WARNING 
+                        		"Found unknown signature on gpt header [%lu].\n",
+                        		(unsigned long) tmp_mbr->custom_signature);
+                        	// Check if last lba is wrong
+                        	// (On amazfit pace this the last lba match)
+                        	//if (tmp_mbr->gpt_header_lba != 0) {
+                        	//	gpt_header_lba = tmp_mbr->gpt_header_lba;
+                        	//
+                        	//	printk(KERN_WARNING 
+                        	//		"GPT header lba changed from %lu to %lu\n",
+                        	//		(unsigned long) GPT_PRIMARY_PARTITION_TABLE_LBA,
+                        	//		(unsigned long) tmp_mbr->gpt_header_lba);
+                        	//}
+                        }
+                    }
 
-                        kfree(legacymbr);
+                    kfree(legacymbr);
                 }
                 if (!good_pmbr)
                         goto fail;
@@ -678,8 +703,31 @@ int efi_partition(struct parsed_partitions *state)
 		u64 start = le64_to_cpu(ptes[i].starting_lba);
 		u64 size = le64_to_cpu(ptes[i].ending_lba) -
 			   le64_to_cpu(ptes[i].starting_lba) + 1ULL;
+		// Keep last lba on a variable, so that we can change it
+		// if needed to allow exceptions (reset for each partition)
+		u64 lastlba = last_lba(state->bdev);
 
-		if (!is_pte_valid(&ptes[i], last_lba(state->bdev)))
+		// Partition info
+		//printk(KERN_WARNING
+        //	"Checking GPT partition: p%d start(%lu) end(%lu) size(%lu) valid(%s)\n",
+        //	(i + 1),
+        //	(unsigned long) start,
+        //	(unsigned long) (start + size - 1),
+        //	(unsigned long) size,
+        //	(is_pte_valid(&ptes[i], lastlba) ? "true" : "false"));
+
+		// If partition out of bounds
+		if (ptes[i].ending_lba > lastlba) {
+			printk(KERN_WARNING
+        	"partition[%d] %llublocks extends beyond LBA (%llu > %llu)\n",
+	        	(i + 1),
+	        	(unsigned long long) ((start + size - 1) - lastlba),
+	        	(unsigned long long) (start + size - 1),
+	        	(unsigned long long) lastlba);
+			lastlba = ptes[i].ending_lba;
+		}
+
+		if (!is_pte_valid(&ptes[i], lastlba))
 			continue;
 
 		put_partition(state, i+1, start * ssz, size * ssz);
