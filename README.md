@@ -125,7 +125,9 @@ CLANG_CONFIG_x86_LINUX_HOST_EXTRA_ASFLAGS := \
 Download this kernel and replace the stock one.
 
 #### Start build
+```sh
 source build/envsetup.sh
 lunch newton2_plus-userdebug
 make update-api
 make -j4
+```
